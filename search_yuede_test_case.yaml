@@ -1,0 +1,10 @@
+- id: menu_search
+  click: click
+- id: search_src_text
+  input: 剑来
+- id: search_src_text
+  click: click
+- id: search_go_btn
+  click: click
+- id: bv_originCount
+  get: text

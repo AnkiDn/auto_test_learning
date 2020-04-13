@@ -7,6 +7,7 @@ from appium import webdriver
 from time import sleep
 
 from hamcrest import *
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
@@ -119,7 +120,7 @@ class TestYudeDemo:
         assert_that(counts.get_attribute("package"), equal_to("io.legado.app.release"))
 
     @pytest.mark.parametrize("book_name, num", search_yuede_data)
-    def test_data_param(self, book_name, num):
+    def test_data_param_from_yaml(self, book_name, num):
         el1 = self.driver.find_element_by_accessibility_id("搜索")
         el1.click()
         el2 = self.driver.find_element_by_id("io.legado.app.release:id/search_src_text")
@@ -131,6 +132,35 @@ class TestYudeDemo:
         assert int(counts.text) >= num
         assert_that(counts.get_attribute("package"), equal_to("io.legado.app.release"))
 
+    def test_step_case_from_yaml(self):
+        TestYueduCase("search_yuede_test_case.yaml").run(self.driver)
+
     def teardown(self):
         # pass
         self.driver.quit()
+
+class TestYueduCase:
+    def __init__(self, case_file):
+        file = open(case_file, "r")
+        self.steps = yaml.safe_load(file)
+
+    def run(self, driver: WebDriver):
+        for step in self.steps:
+            print(step)
+            element = None
+            if isinstance(step, dict):
+                if "id" in step.keys():
+                    element = driver.find_element_by_id(step["id"])
+                elif "xpath" in step.keys():
+                    element = driver.find_element_by_xpath(step["xpath"])
+                else:
+                    print(step.keys())
+
+                if "click" in step.keys():
+                    element.click()
+                elif "input" in step.keys():
+                    element.send_keys(step["input"])
+
+                if "get" in step.keys():
+                    text = element.get_attribute(step["get"])
+                    print(text)
