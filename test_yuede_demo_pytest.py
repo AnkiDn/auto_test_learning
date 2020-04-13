@@ -1,5 +1,7 @@
 import datetime
 
+import pytest
+import yaml
 from appium import webdriver
 # from appium.webdriver.common.touch_action import TouchAction
 from time import sleep
@@ -12,6 +14,8 @@ from selenium.webdriver.common.by import By
 
 
 class TestYudeDemo:
+    search_yuede_data = yaml.safe_load(open("search_yuede.yaml", "r"))
+
     def setup(self):
         caps = {}
         caps["platformName"] = "Android"
@@ -98,6 +102,35 @@ class TestYudeDemo:
             assert "最新" in lasteds[0].text
             assert_that(lasteds[0].get_attribute("package"), equal_to("io.legado.app.release"))
 
+    @pytest.mark.parametrize("book_name, num", [
+        ("剑来", 1),
+        ("诡秘之主", 0)
+    ])
+    def test_data_param(self, book_name, num):
+        el1 = self.driver.find_element_by_accessibility_id("搜索")
+        el1.click()
+        el2 = self.driver.find_element_by_id("io.legado.app.release:id/search_src_text")
+        el2.send_keys(book_name)
+        self.driver.find_element_by_id("search_src_text").click()
+        self.driver.find_element_by_id("search_go_btn").click()
+        counts = self.driver.find_element_by_id("bv_originCount")
+        assert "originCount" in counts.get_attribute("resource-id")
+        assert int(counts.text) >= num
+        assert_that(counts.get_attribute("package"), equal_to("io.legado.app.release"))
+
+    @pytest.mark.parametrize("book_name, num", search_yuede_data)
+    def test_data_param(self, book_name, num):
+        el1 = self.driver.find_element_by_accessibility_id("搜索")
+        el1.click()
+        el2 = self.driver.find_element_by_id("io.legado.app.release:id/search_src_text")
+        el2.send_keys(book_name)
+        self.driver.find_element_by_id("search_src_text").click()
+        self.driver.find_element_by_id("search_go_btn").click()
+        counts = self.driver.find_element_by_id("bv_originCount")
+        assert "originCount" in counts.get_attribute("resource-id")
+        assert int(counts.text) >= num
+        assert_that(counts.get_attribute("package"), equal_to("io.legado.app.release"))
+
     def teardown(self):
-        pass
-        # self.driver.quit()
+        # pass
+        self.driver.quit()
