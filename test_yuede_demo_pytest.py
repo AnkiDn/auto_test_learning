@@ -1,17 +1,13 @@
 import datetime
+# from appium.webdriver.common.touch_action import TouchAction
+from time import sleep
 
 import pytest
 import yaml
 from appium import webdriver
-# from appium.webdriver.common.touch_action import TouchAction
-from time import sleep
-
 from hamcrest import *
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.common.by import By
-
 
 
 class TestYudeDemo:
