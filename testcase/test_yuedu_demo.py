@@ -14,7 +14,6 @@ class TestYueduDemo:
         caps["appActivity"] = "io.legado.app.ui.welcome.WelcomeActivity"
         caps["noReset"] = True
         caps['unicodeKeyboard'] = True
-        # caps['udid'] = "emulator-5554"
 
         self.driver = webdriver.Remote("http://localhost:4723/wd/hub", caps)
         self.driver.implicitly_wait(5)
