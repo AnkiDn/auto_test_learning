@@ -1,19 +1,22 @@
-from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+
+from appium_temp.page.base_page import BasePage
 
 
-class YueduSearchPage(object):
-    def __init__(self, driver: WebDriver):
-        self.driver = driver
+class YueduSearchPage(BasePage):
+    _search_src_text = (By.ID, "io.legado.app.release:id/search_src_text")
+    _search_go_btn = (By.ID, "search_go_btn")
+    _tv_lasted = (By.ID, "tv_lasted")
 
     def search(self, keyword):
-        el2 = self.driver.find_element_by_id("io.legado.app.release:id/search_src_text")
+        el2 = self.find_element(self._search_src_text)
         el2.send_keys(keyword)
-        self.driver.find_element_by_id("search_src_text").click()
-        self.driver.find_element_by_id("search_go_btn").click()
+        el2.click()
+        self.find_element(self._search_go_btn).click()
         return self
 
     def getLasted(self):
-        lasteds = self.driver.find_elements_by_id("tv_lasted")
+        lasteds = self.find_elements(self._tv_lasted)
         if len(lasteds) >= 1:
             return lasteds[0].text
         else:
