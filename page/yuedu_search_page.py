@@ -1,10 +1,11 @@
+from selenium.webdriver.remote.webdriver import WebDriver
+
+
 class YueduSearchPage(object):
-    def __init__(self, driver):
+    def __init__(self, driver: WebDriver):
         self.driver = driver
 
     def search(self, keyword):
-        el1 = self.driver.find_element_by_accessibility_id("搜索")
-        el1.click()
         el2 = self.driver.find_element_by_id("io.legado.app.release:id/search_src_text")
         el2.send_keys(keyword)
         self.driver.find_element_by_id("search_src_text").click()
